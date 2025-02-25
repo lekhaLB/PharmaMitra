@@ -1,10 +1,7 @@
-import React, { useState } from "react";
-import { uploadImage, Medicine } from "../api/ocr";
+import { useState } from "react";
 
-const UploadForm: React.FC = () => {
+const UploadForm = () => {
     const [file, setFile] = useState<File | null>(null);
-    const [medicines, setMedicines] = useState<Medicine[]>([]);
-    const [loading, setLoading] = useState(false);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -13,33 +10,35 @@ const UploadForm: React.FC = () => {
     };
 
     const handleUpload = async () => {
-        if (!file) return;
-        setLoading(true);
-        const meds = await uploadImage(file);
-        setMedicines(meds);
-        setLoading(false);
+        if (!file) {
+            alert("Please select a file first.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("image", file); // "image" must match Django backend
+
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/process-image/", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("Response from backend:", data);
+        } catch (error) {
+            console.error("Upload failed:", error);
+        }
     };
 
     return (
-        <div className="container">
-            <h2>Upload Prescription</h2>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            <button onClick={handleUpload} disabled={!file || loading}>
-                {loading ? "Processing..." : "Upload & Extract"}
-            </button>
-
-            {medicines.length > 0 && (
-                <div>
-                    <h3>Matched Medicines:</h3>
-                    <ul>
-                        {medicines.map((med, index) => (
-                            <li key={index}>
-                                {med.name} - {med.dosage} (₹{med.price})
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+        <div>
+            <input type="file" onChange={handleFileChange} accept="image/*" />
+            <button onClick={handleUpload}>Upload</button>
         </div>
     );
 };
