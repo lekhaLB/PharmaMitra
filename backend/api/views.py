@@ -1,7 +1,10 @@
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
-# Import functions
+
+import json
+from .models import Medication, Order, OrderItem
 from api.scripts.OcrTest import extract_text_from_image, filter_medicines_with_llama
 
 
@@ -28,26 +31,34 @@ def process_image(request):
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 
-# from .ocr import extract_text_from_image, filter_medicines_with_llama  # Import functions
+def create_order(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_id = data.get("user_id")  # Ensure frontend sends user_id
+            medicines_list = data.get("medicines", [])
 
-# @csrf_exempt  # Remove CSRF for testing, secure properly in production
-# def process_image(request):
-#     if request.method == "POST" and request.FILES.get("image"):
-#         try:
-#             # Read image file
-#             image_file = request.FILES["image"].read()
+            user = User.objects.get(id=user_id)
 
-#             # Extract text using OCR
-#             extracted_text = extract_text_from_image(image_file)
+            matched_medications = Medication.objects.filter(
+                name__in=medicines_list)
 
-#             # Filter medicines from extracted text
-#             if extracted_text:
-#                 medicines = filter_medicines_with_llama(extracted_text)
-#                 return JsonResponse({"extracted_text": extracted_text, "medicines": medicines}, status=200)
-#             else:
-#                 return JsonResponse({"error": "No text detected in image"}, status=400)
+            if not matched_medications.exists():
+                return JsonResponse({"error": "No matching medicines found."}, status=400)
 
-#         except Exception as e:
-#             return JsonResponse({"error": str(e)}, status=500)
+            order = Order.objects.create(user=user, total_price=0.00)
 
-#     return JsonResponse({"error": "Invalid request"}, status=400)
+            total_price = 0.00
+            for medication in matched_medications:
+                OrderItem.objects.create(
+                    order=order, medication=medication, quantity=1)
+                total_price += float(medication.price)
+
+            order.total_price = total_price
+            order.save()
+
+            return JsonResponse({"message": "Order created successfully", "order_id": order.id}, status=201)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "User not found"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
