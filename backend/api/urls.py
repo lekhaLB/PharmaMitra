@@ -1,7 +1,6 @@
 from django.urls import path
-from .views import get_medications, add_medication
+from .views import process_image
 
 urlpatterns = [
-    path("medications/", get_medications),
-    path("medications/add/", add_medication),
+    path("process-image/", process_image.as_View(), name="process_image"),
 ]
