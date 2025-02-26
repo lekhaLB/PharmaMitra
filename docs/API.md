@@ -62,7 +62,7 @@
 ```
 
 ---
-## 5. Register User
+## 3. Register User
 **Endpoint:** `/register/`  
 **Method:** `POST`  
 **Description:** Registers a new user.
@@ -96,7 +96,7 @@
 ```
 
 ---
-## 6. Login User
+## 4. Login User
 **Endpoint:** `/login/`  
 **Method:** `POST`  
 **Description:** Authenticates a user.
