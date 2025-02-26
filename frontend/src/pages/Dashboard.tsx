@@ -4,7 +4,7 @@ import ChatBot from "../components/ChatBot/Chatbot";
 const Dashboard: React.FC = () => {
     return (
         <div className="dashboard-container">
-            <h1>PharmaMitra - Prescription Assistant</h1>
+            <h1>PharmaMitra - Pharmacist's Assistant</h1>
             <UploadForm />
             <ChatBot />
         </div>
