@@ -1,1 +1,1 @@
-![Architecture Diagram]("/ArchitectureDiag.png")
+![Architecture Diagram](ArchitectureDiag.png)
