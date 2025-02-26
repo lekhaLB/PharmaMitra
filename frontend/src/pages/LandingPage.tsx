@@ -3,18 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Register from "../components/Register";
 import Login from "../components/Login";
 
-
-
 const LandingPage: React.FC = () => {
     const [isRegistering, setIsRegistering] = useState(false);
     const navigate = useNavigate();
 
-    const handleRegSuccess = () => {
-        navigate("/login"); // Redirect to Dashboard after login/register
-    };
-
     const handleLoginSuccess = () => {
-        navigate("/dashboard"); // Redirect to Dashboard after login/register
+        navigate("/dashboard"); // Redirect to Dashboard after login
     };
 
     return (
@@ -22,21 +16,9 @@ const LandingPage: React.FC = () => {
             <h1>Welcome to PharmaMitra</h1>
             <div className="auth-card">
                 {isRegistering ? (
-                    <>
-                        <Register onSuccess={handleRegSuccess} />
-                        <p>
-                            Already have an account?{" "}
-                            <button onClick={() => setIsRegistering(false)}>Login</button>
-                        </p>
-                    </>
+                    <Register onSwitchToLogin={() => setIsRegistering(false)} />
                 ) : (
-                    <>
-                        <Login onSuccess={handleLoginSuccess} />
-                        <p>
-                            New here?{" "}
-                            <button onClick={() => setIsRegistering(true)}>Register</button>
-                        </p>
-                    </>
+                    <Login onSuccess={handleLoginSuccess} onSwitchToRegister={() => setIsRegistering(true)} />
                 )}
             </div>
         </div>
