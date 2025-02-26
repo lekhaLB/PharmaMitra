@@ -24,7 +24,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3y3fzdz3potmyime0h3zo64rv1vijr7z7dgcjco8h8f!-jh#83'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -143,4 +143,4 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
 }
 
-GEMINI_API_KEY = ''
+GEMINI_API_KEY = 'AIzaSyAqGvx-iwDvrgeAyKpsTtHJ3ZOyRk9xuYs'
