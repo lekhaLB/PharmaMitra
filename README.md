@@ -7,7 +7,6 @@ PharmaMitra extracts medicine names and dosages from prescription images using G
 1. **Clone the Repository**
    ```sh
    git clone https://github.com/your-repo/pharmamitra.git
-   cd pharmamitra
    ```
 
 2. **Install Dependencies**
