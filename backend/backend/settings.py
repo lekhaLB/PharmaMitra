@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "api",
     'drf_yasg',
+    'chatbot',
 ]
 
 MIDDLEWARE = [
@@ -141,3 +142,5 @@ CORS_ALLOW_ALL_ORIGINS = True
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
 }
+
+GEMINI_API_KEY = 'AIzaSyAqGvx-iwDvrgeAyKpsTtHJ3ZOyRk9xuYs'
