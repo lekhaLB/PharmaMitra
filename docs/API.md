@@ -62,64 +62,7 @@
 ```
 
 ---
-## 3. Create Order
-**Endpoint:** `/create_order/`  
-**Method:** `POST`  
-**Description:** Creates a new order for a user with selected medicines.
-
-### Request
-**Headers:**
-- `Content-Type: application/json`
-
-**Body:**
-```json
-{
-    "user_id": 1,
-    "medicines": [
-        {"name": "Paracetamol", "quantity": 2},
-        {"name": "Aspirin", "quantity": 1}
-    ]
-}
-```
-
-### Response
-**Success (201):**
-```json
-{
-    "message": "Order created successfully!"
-}
-```
-**Error (400):**
-```json
-{
-    "error": "User ID and medicines required"
-}
-```
-
----
-## 4. Get Orders
-**Endpoint:** `/get_orders/`  
-**Method:** `GET`  
-**Description:** Retrieves all orders.
-
-### Response
-**Success (200):**
-```json
-{
-    "orders": [
-        {"id": 1, "medicines": "Paracetamol", "quantity": 2, "created_at": "2025-02-26T12:00:00Z"}
-    ]
-}
-```
-**Error (405):**
-```json
-{
-    "error": "Invalid request method"
-}
-```
-
----
-## 5. Register User
+## 3. Register User
 **Endpoint:** `/register/`  
 **Method:** `POST`  
 **Description:** Registers a new user.
@@ -153,7 +96,7 @@
 ```
 
 ---
-## 6. Login User
+## 4. Login User
 **Endpoint:** `/login/`  
 **Method:** `POST`  
 **Description:** Authenticates a user.
