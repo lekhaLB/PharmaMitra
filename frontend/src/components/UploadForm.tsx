@@ -10,41 +10,6 @@ const UploadForm: React.FC = () => {
         }
     };
 
-    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault();
-
-    //     if (!selectedFile) {
-    //         console.error("No file selected");
-    //         return;
-    //     }
-
-    //     const formData = new FormData();
-    //     formData.append("image", selectedFile);
-
-    //     try {
-    //         const response = await fetch("http://127.0.0.1:8000/api/process-image/", {
-    //             method: "POST",
-    //             body: formData,
-    //         });
-
-    //         const data = await response.json();
-    //         console.log("Response from backend:", data);
-
-    //         if (!data.extracted_text || !Array.isArray(data.extracted_text)) {
-    //             console.error("Invalid extracted_text format:", data.extracted_text);
-    //             return;
-    //         }
-
-    //         // Filter out null values and split by newline
-    //         const medicinesArray = data.extracted_text.filter(Boolean).map(item => item.split("\n")).flat();
-    //         console.log("Medicines Array:", medicinesArray);
-    //         setMedicines(medicinesArray);
-
-
-    //     } catch (error) {
-    //         console.error("Error uploading image:", error);
-    //     }
-    // };
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -70,22 +35,13 @@ const UploadForm: React.FC = () => {
                 return;
             }
 
-            const medicinesArray = data.extracted_text.filter(Boolean).map(item => item.split("\n")).flat();
+            // Filter out null values and split by newline
+            const medicinesArray = data.extracted_text.filter(Boolean)
+                .map(item => item.split("\n")).flat().map(line => line.split(" ")[0]);
+
             console.log("Medicines Array:", medicinesArray);
+            setMedicines(medicinesArray);
 
-            // Send to backend to filter valid medicines
-            const checkResponse = await fetch("http://127.0.0.1:8000/api/check-medicines/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ medicines: medicinesArray }),
-            });
-
-            const checkData = await checkResponse.json();
-            console.log("Valid Medicines:", checkData.valid_medicines);
-
-            localStorage.setItem("cart", JSON.stringify(checkData.valid_medicines)); // Store for cart
 
         } catch (error) {
             console.error("Error uploading image:", error);

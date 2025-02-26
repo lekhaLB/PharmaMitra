@@ -1,4 +1,3 @@
-import React from "react";
 import UploadForm from "../components/UploadForm";
 import ChatBot from "../components/ChatBot/Chatbot";
 

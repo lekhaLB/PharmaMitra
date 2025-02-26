@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 
 import json
@@ -32,26 +33,47 @@ def process_image(request):
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 
+# @csrf_exempt
+# def check_medicines(request):
+#     if request.method == "POST":
+#         try:
+#             data = json.loads(request.body)
+#             medicines_list = data.get("medicines", [])
+
+#             if not medicines_list:
+#                 return JsonResponse({"error": "No medicines provided"}, status=400)
+
+#             valid_medicines = Medication.objects.filter(
+#                 name__in=medicines_list).values("name")
+#             valid_medicines = list(valid_medicines)
+
+#             return JsonResponse({"valid_medicines": valid_medicines}, status=200)
+
+#         except json.JSONDecodeError:
+#             return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+#     return JsonResponse({"error": "Invalid request method"}, status=405)
+
 @csrf_exempt
+@require_POST
 def check_medicines(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            medicines_list = data.get("medicines", [])
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-            if not medicines_list:
-                return JsonResponse({"error": "No medicines provided"}, status=400)
-
+    match data:
+        case {"medicines": list(medicines_list)} if medicines_list:
             valid_medicines = Medication.objects.filter(
-                name__in=medicines_list).values("name")
-            valid_medicines = list(valid_medicines)
+                name__in=medicines_list).values()
 
-            return JsonResponse({"valid_medicines": valid_medicines}, status=200)
+            print(valid_medicines)
 
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
-
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+            return JsonResponse({"valid_medicines": list(valid_medicines)}, status=200)
+        case {"medicines": []}:
+            return JsonResponse({"error": "No medicines provided"}, status=400)
+        case _:
+            return JsonResponse({"error": "Invalid payload format"}, status=400)
 
 
 @csrf_exempt
