@@ -143,4 +143,4 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
 }
 
-GEMINI_API_KEY = 'AIzaSyAqGvx-iwDvrgeAyKpsTtHJ3ZOyRk9xuYs'
+GEMINI_API_KEY = ''
